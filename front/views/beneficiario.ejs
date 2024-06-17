@@ -1,0 +1,140 @@
+<h1>
+    <%=title%>
+</h1>
+
+<form id="benefForm">
+
+    <input required type="hidden" name="id" id="id">
+
+    <label for="nome">Nome:</label>
+    <input required id="nome" name="nome" type="text">
+    <br>
+    
+    <label for="cnpj">Cnpj:</label>
+    <input required id="cnpj" name="cnpj" type="text">
+    <br>
+
+    <label for="endereco">Endereço:</label>
+    <input required id="endereco" name="endereco" type="text">
+    <br>
+
+    <label for="telefone">Telefone:</label>
+    <input required id="telefone" name="telefone" type="text">
+
+    <button type="submit">Enviar</button>
+    <button type="reset">Cancelar</button>
+
+</form>
+<span id="error"></span>
+
+<%if(error){%>
+    <span><%=error%></span>
+<%}%>  
+
+<table>
+    <thead>
+        <tr>
+            <%for(let col of cols){%>
+            <th><%=col%></th>
+            <%}%>
+        </tr>
+    </thead>
+    <tbody>
+        <%for(let benef of benefs){%>
+        <tr>
+            <%for(let prop in benef){%>
+            <td><%=benef[prop]%></td>
+            <%}%>
+            <td>
+                <button onclick="editBenef('<%=benef.id%>')">Editar</button>
+                <button onclick="deleteBenef('<%=benef.id%>')">Deletar</button>
+            </td>
+        </tr>
+        <%}%>
+    </tbody>
+</table>
+
+<script>
+    const form = document.getElementById("benefForm");
+
+    //REALIZA AS REQUISIÇÕES DE POST OU PUT
+    form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        
+        const benef = mountDataForm();
+
+        let id = benef.id
+        let METHOD = id ? 'PUT' : 'POST';
+        let URL = id ? `/beneficiario/${id}` : '/beneficiario';
+
+        console.log(benef);
+
+        createOrUpdate(benef, URL, METHOD);
+    });
+
+    //CRIA E ATUALIZA O BENEFICIÁRIO
+    function createOrUpdate(benef, URL, METHOD) {
+        fetch(URL, {
+            method: METHOD,
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify(benef)
+        })
+        .then(async (res) => { return await checkError(res) })
+        .then((benef) => {
+            form.reset()
+            window.location.reload() 
+        }).catch((error) =>{
+            document.getElementById('error').innerText = error;
+        })
+    }
+
+    //ATUALIZA O FORMULÁRIO PARA PODER EDITAR
+    function editBenef(id) {
+        console.log(id)
+        fetch("/beneficiario/" + id, {
+            method: "GET"
+        })
+        .then(async (res) => { return await checkError(res) })
+        .then((benef) => {
+            console.log('retornou o beneficiario', benef)
+            for (let prop in benef) {
+                const input = document.querySelector(`input[name="${prop}"]`);
+                input.value = benef[prop]
+            }
+        })
+        .catch((error) => { document.getElementById('error').innerText = error });
+    }
+
+    //DELETA O BENEFICIÁRIO PELO ID
+    function deleteBenef(id) {
+        console.log(id)
+        fetch("/beneficiario/" + id, {
+            method: "DELETE"
+        })
+        .then(async (res) => { return await checkError(res) })
+        .then((benef) => {
+            window.location.reload()
+        })
+        .catch((error) => { document.getElementById('error').innerText = error });
+    }
+
+    //TRATA OS ERROS
+    async function checkError(res) {
+        if(!res.ok) {
+            const err = await res.json()
+            throw err
+        }
+        return res.json();
+    }
+
+    //CARREGA OS CAMPOS DO FORMULÁRIO PREENCHIDOS
+    function mountDataForm() {
+        const formData = new FormData(form);
+        const benef = {};
+        formData.forEach((v, k) => {
+            benef[k] = v;
+        });
+        return benef;
+    }
+
+</script>
