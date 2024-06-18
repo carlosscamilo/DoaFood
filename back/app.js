@@ -10,10 +10,12 @@ app.use(express.json());
 // IMPORTE DAS ROTAS /ROUTES
 var indexRouter = require('./routes/index');
 var benefRouter = require('./routes/beneficiario');
+var doadorRouter = require('./routes/doador')
 
 // DEFINE OS END-POINTS/RECURSOS 
 app.use('/', indexRouter);
 app.use('/beneficiario', benefRouter);
+app.use('/doador', doadorRouter)
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

@@ -1,0 +1,163 @@
+<h1>
+    <%= title %>
+</h1>
+
+<form id="doadorForm">
+
+    <input required type="hidden" name="id" id="id">
+
+    <label for="nome">Nome:</label>
+    <input required id="nome" name="nome" type="text">
+    <br>
+    
+    <label for="email">Email:</label>
+    <input required id="email" name="email" type="email">
+    <br>
+
+    <label for="endereco">Endereço:</label>
+    <input required id="endereco" name="endereco" type="text">
+    <br>
+
+    <label for="telefone">Telefone:</label>
+    <input required id="telefone" name="telefone" type="text">
+
+    <button type="submit">Enviar</button>
+    <button type="reset">Cancelar</button>
+
+</form>
+<span id="error"></span>
+
+<% if(error) { %>
+    <span><%= error %></span>
+<% } %>  
+
+<table>
+    <thead>
+        <tr>
+            <% for(let col of cols) { %>
+            <th><%= col %></th>
+            <% } %>
+            <th>Ações</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% for(let doador of doadores) { %>
+        <tr>
+            <td><%= doador.id %></td>
+            <td><%= doador.nome %></td>
+            <td><%= doador.email %></td>
+            <td><%= doador.endereco %></td>
+            <td><%= doador.telefone %></td>
+            <td>
+                <button onclick="editDoador('<%= doador.id %>')">Editar</button>
+                <button onclick="deleteDoador('<%= doador.id %>')">Deletar</button>
+            </td>
+        </tr>
+        <% } %>
+    </tbody>
+</table>
+
+<script>
+    const form = document.getElementById("doadorForm");
+
+    // Realiza as requisições de POST ou PUT
+    form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        
+        const doador = mountDataForm();
+
+        let id = doador.id;
+        let METHOD = id ? 'PUT' : 'POST';
+        let URL = id ? `/doador/${id}` : '/doador';
+
+        createOrUpdate(doador, URL, METHOD);
+    });
+
+    // Cria e atualiza o doador
+    function createOrUpdate(doador, URL, METHOD) {
+        fetch(URL, {
+            method: METHOD,
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify(doador)
+        })
+        .then(async (res) => {
+            if (!res.ok) {
+                const err = await res.json();
+                throw err;
+            }
+            return res.json();
+        })
+        .then(() => {
+            form.reset();
+            window.location.reload();
+        })
+        .catch((error) => {
+            document.getElementById('error').innerText = error;
+        });
+    }
+
+    // Atualiza o formulário para poder editar
+    function editDoador(id) {
+        fetch(`/doador/${id}`, {
+            method: "GET"
+        })
+        .then(async (res) => {
+            if (!res.ok) {
+                const err = await res.json();
+                throw err;
+            }
+            return res.json();
+        })
+        .then((doador) => {
+            for (let prop in doador) {
+                const input = document.querySelector(`input[name="${prop}"]`);
+                if (input) {
+                    input.value = doador[prop];
+                }
+            }
+        })
+        .catch((error) => {
+            document.getElementById('error').innerText = error;
+        });
+    }
+
+    // Deleta o doador pelo ID
+    function deleteDoador(id) {
+        fetch(`/doador/${id}`, {
+            method: "DELETE"
+        })
+        .then(async (res) => {
+            if (!res.ok) {
+                const err = await res.json();
+                throw err;
+            }
+            return res.json();
+        })
+        .then(() => {
+            window.location.reload();
+        })
+        .catch((error) => {
+            document.getElementById('error').innerText = error;
+        });
+    }
+
+    // Trata os erros
+    async function checkError(res) {
+        if (!res.ok) {
+            const err = await res.json();
+            throw err;
+        }
+        return res.json();
+    }
+
+    // Carrega os campos do formulário preenchidos
+    function mountDataForm() {
+        const formData = new FormData(form);
+        const doador = {};
+        formData.forEach((v, k) => {
+            doador[k] = v;
+        });
+        return doador;
+    }
+
+</script>

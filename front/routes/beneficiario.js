@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-const url = 'https://silver-journey-vr75rvxqjwqhwwwj-4000.app.github.dev/beneficiario/';
+const url = 'https://cuddly-space-fortnight-q7v44964x6jpc9v77-4000.app.github.dev/beneficiario';
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
