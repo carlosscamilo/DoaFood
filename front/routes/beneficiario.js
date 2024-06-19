@@ -16,12 +16,14 @@ router.get('/', function(req, res, next) {
   .then((benefs) => {
     let title = 'Gestão de Beneficiários';
     let cols = ["Id", "Nome", "Cnpj", "Endereço", "Telefone", "Ações"]
-    res.render('beneficiario', {title, benefs, cols, error: "" });
-  })  
+    res.render('layout', { body: 'pages/beneficiario',title, benefs, cols, error: "" });
+  })
+
+
   .catch((error) => {
     console.log('Erro', error);
-    res.status(500).send("Erro ao Buscar Beneficiários");
-  })
+    res.rend( 'layout' , { body: 'pages/beneficiario',title :"gestâo de Doadores"});
+  });
 });
 
 //Post Novo Beneficiário

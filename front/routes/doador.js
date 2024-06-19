@@ -15,11 +15,11 @@ router.get('/', function(req, res, next) {
     .then((doadores) => {
       let title = 'Gestão de Doadores';
       let cols = ["Id", "Nome", "Email", "Endereço", "Telefone", "Ações"];
-      res.render('doador', { title, doadores, cols, error: "" });
+      res.render('layout', { body: 'pages/doador',title, doadores, cols, error: "" });
     })
     .catch((error) => {
       console.log('Erro', error);
-      res.status(500).send("Erro ao Buscar Doadores");
+      res.render( 'layout' , { body: 'pages/doador',title :"gestâo de Doadores"});
     });
 });
 
