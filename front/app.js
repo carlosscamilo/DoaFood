@@ -9,12 +9,14 @@ app.use(express.json());
 
 var indexRouter = require('./routes/index');
 var beneficiarioRouter = require('./routes/beneficiario');
-var doadorRouter = require('./routes/doador')
+var doadorRouter = require('./routes/doador');
+var doacoesRouter = require('./routes/doacoes');
 
 
 app.use('/', indexRouter);
 app.use('/beneficiario', beneficiarioRouter);
 app.use('/doador', doadorRouter)
+app.use('/doacoes', doacoesRouter)
 
 
 // view engine setup
