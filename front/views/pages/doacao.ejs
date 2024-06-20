@@ -82,7 +82,7 @@
             const doacao = mountDataForm();
             let id = doacao.id;
             let METHOD = id ? 'PUT' : 'POST';
-            let URL = id ? /doacao/${id} : '/doacao';
+            let URL = id ? `/doacoes/${id}` : '/doacoes';
             createOrUpdate(doacao, URL, METHOD);
         });
 
@@ -105,7 +105,7 @@
 
         // Atualiza o formulário para poder editar
         function editDoacao(id) {
-            fetch("/doacao/" + id, { method: "GET" })
+            fetch("/doacoes/" + id, { method: "GET" })
             .then(async (res) => await checkError(res))
             .then((doacao) => {
                 for (let prop in doacao) {
@@ -122,7 +122,7 @@
 
         // Deleta a doação pelo ID
         function deleteDoacao(id) {
-            fetch("/doacao/" + id, { method: "DELETE" })
+            fetch("/doacoes/" + id, { method: "DELETE" })
             .then(async (res) => await checkError(res))
             .then(() => {
                 window.location.reload();
