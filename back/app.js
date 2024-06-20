@@ -11,11 +11,13 @@ app.use(express.json());
 var indexRouter = require('./routes/index');
 var benefRouter = require('./routes/beneficiario');
 var doadorRouter = require('./routes/doador')
+var doacoesRouter = require('./routes/doacoes')
 
 // DEFINE OS END-POINTS/RECURSOS 
 app.use('/', indexRouter);
 app.use('/beneficiario', benefRouter);
 app.use('/doador', doadorRouter)
+app.use('/doacoes', doacoesRouter)
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
