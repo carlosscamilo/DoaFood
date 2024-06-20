@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-const url = 'https://silver-journey-vr75rvxqjwqhwwwj-4000.app.github.dev/beneficiario/';
+const url = 'https://cuddly-space-fortnight-q7v44964x6jpc9v77-4000.app.github.dev/beneficiario';
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -16,12 +16,14 @@ router.get('/', function(req, res, next) {
   .then((benefs) => {
     let title = 'Gestão de Beneficiários';
     let cols = ["Id", "Nome", "Cnpj", "Endereço", "Telefone", "Ações"]
-    res.render('beneficiario', {title, benefs, cols, error: "" });
-  })  
+    res.render('layout', { body: 'pages/beneficiario',title, benefs, cols, error: "" });
+  })
+
+
   .catch((error) => {
     console.log('Erro', error);
-    res.status(500).send("Erro ao Buscar Beneficiários");
-  })
+    res.rend( 'layout' , { body: 'pages/beneficiario',title :"gestâo de Doadores"});
+  });
 });
 
 //Post Novo Beneficiário
