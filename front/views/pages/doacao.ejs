@@ -1,43 +1,35 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title><%= title %></title>
+    <title><%=title%></title>
     <!-- Materialize CSS -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
     <!-- Materialize JavaScript -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <!-- jQuery (Materialize dependency) -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
-
-
 </head>
 <body>
     <div class="container">
-        <h1 class="center-align"><%= title %></h1>
+        <h1 class="center-align"><%=title%></h1>
 
-        <form id="doadorForm" class="col s12">
-            <input type="hidden" name="id" id="id">
+        <form id="doacaoForm" class="col s12">
+            <input required type="hidden" name="id" id="id">
 
             <div class="input-field">
-                <label for="nome">Nome:</label>
-                <input required id="nome" name="nome" type="text">
+                <label for="descricao">Descrição:</label>
+                <input required id="descricao" name="descricao" type="text">
             </div>
 
             <div class="input-field">
-                <label for="email">Email:</label>
-                <input required id="email" name="email" type="email">
+                <label for="data">Data:</label>
+                <input required id="data" name="data" type="text" class="datepicker">
             </div>
 
             <div class="input-field">
-                <label for="endereco">Endereço:</label>
-                <input required id="endereco" name="endereco" type="text">
-            </div>
-
-            <div class="input-field">
-                <label for="telefone">Telefone:</label>
-                <input required id="telefone" name="telefone" type="text">
+                <label for="doacao">Doação:</label>
+                <input required id="doacao" name="doacao" type="number" step="0.01">
             </div>
 
             <div class="row">
@@ -53,51 +45,53 @@
         <span id="error" class="red-text"></span>
 
         <% if (error) { %>
-            <span class="red-text"><%= error %></span>
+            <span class="red-text"><%=error%></span>
         <% } %>
 
         <table class="striped">
             <thead>
                 <tr>
-                    <% cols.forEach(col => { %>
-                        <th><%= col %></th>
-                    <% }) %>
-                    <th>Ações</th> <!-- Add Ações column header -->
+                    <th>Descrição</th>
+                    <th>Data</th>
+                    <th>Doação</th>
+                    <th>Ações</th>
                 </tr>
             </thead>
             <tbody>
-                <% doadores.forEach(doador => { %>
+                <% for (let doacao of doacoes) { %>
                     <tr>
-                        <% Object.values(doador).forEach(value => { %>
-                            <td><%= value %></td>
-                        <% }) %>
+                        <td><%=doacao.descricao%></td>
+                        <td><%=new Date(doacao.data).toLocaleDateString()%></td>
+                        <td><%=doacao.doacao%></td>
                         <td>
-                            <button class="btn-small waves-effect waves-light" onclick="editDoador('<%= doador.id %>')">Editar</button>
-                            <button class="btn-small waves-effect waves-light red" onclick="deleteDoador('<%= doador.id %>')">Deletar</button>
+                            <button class="btn-small waves-effect waves-light" onclick="editDoacao('<%=doacao.id%>')">Editar</button>
+                            <button class="btn-small waves-effect waves-light red" onclick="deleteDoacao('<%=doacao.id%>')">Deletar</button>
                         </td>
                     </tr>
-                <% }) %>
+                <% } %>
             </tbody>
         </table>
     </div>
 
     <script>
-        const form = document.getElementById("doadorForm");
+        const form = document.getElementById("doacaoForm");
 
+        // Realiza as requisições de POST ou PUT
         form.addEventListener("submit", (e) => {
             e.preventDefault();
-            const doador = mountDataForm();
-            let id = doador.id;
+            const doacao = mountDataForm();
+            let id = doacao.id;
             let METHOD = id ? 'PUT' : 'POST';
-            let URL = id ? `/doador/${id}` : '/doador';
-            createOrUpdate(doador, URL, METHOD);
+            let URL = id ? /doacao/${id} : '/doacao';
+            createOrUpdate(doacao, URL, METHOD);
         });
 
-        function createOrUpdate(doador, URL, METHOD) {
+        // Cria e atualiza a doação
+        function createOrUpdate(doacao, URL, METHOD) {
             fetch(URL, {
                 method: METHOD,
                 headers: {"Content-Type": "application/json"},
-                body: JSON.stringify(doador)
+                body: JSON.stringify(doacao)
             })
             .then(async (res) => await checkError(res))
             .then(() => {
@@ -109,14 +103,15 @@
             });
         }
 
-        function editDoador(id) {
-            fetch("/doador/" + id, { method: "GET" })
+        // Atualiza o formulário para poder editar
+        function editDoacao(id) {
+            fetch("/doacao/" + id, { method: "GET" })
             .then(async (res) => await checkError(res))
-            .then((doador) => {
-                for (let prop in doador) {
+            .then((doacao) => {
+                for (let prop in doacao) {
                     const input = document.querySelector(input[name="${prop}"]);
                     if (input) {
-                        input.value = doador[prop];
+                        input.value = doacao[prop];
                     }
                 }
             })
@@ -125,8 +120,9 @@
             });
         }
 
-        function deleteDoador(id) {
-            fetch("/doador/" + id, { method: "DELETE" })
+        // Deleta a doação pelo ID
+        function deleteDoacao(id) {
+            fetch("/doacao/" + id, { method: "DELETE" })
             .then(async (res) => await checkError(res))
             .then(() => {
                 window.location.reload();
@@ -136,6 +132,7 @@
             });
         }
 
+        // Trata os erros
         async function checkError(res) {
             if (!res.ok) {
                 const err = await res.json();
@@ -144,19 +141,28 @@
             return res.json();
         }
 
+        // Carrega os campos do formulário preenchidos
         function mountDataForm() {
             const formData = new FormData(form);
-            const doador = {};
+            const doacao = {};
             formData.forEach((v, k) => {
-                doador[k] = v;
+                doacao[k] = v;
             });
-            return doador;
+            return doacao;
         }
-        $(document).ready(function(){
-            $('#telefone').mask('(00) 00000-0000');
-        });
 
-        
+        // Inicializa o datepicker do Materialize
+        document.addEventListener('DOMContentLoaded', function() {
+            var elems = document.querySelectorAll('.datepicker');
+            M.Datepicker.init(elems, {
+                format: 'dd/mm/yyyy',
+                i18n: {
+                    months: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+                    weekdaysShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'],
+                    weekdaysAbbrev: ['D', 'S', 'T', 'Q', 'Q', 'S', 'S']
+                }
+            });
+        });
     </script>
 </body>
 </html>

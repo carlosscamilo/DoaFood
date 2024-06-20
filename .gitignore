@@ -2,3 +2,4 @@ back/package.json
 back/package-lock.json
 front/package-lock.json
 front/package.json
+back/database/database.db
