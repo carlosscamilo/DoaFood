@@ -5,6 +5,8 @@ const url = 'https://zany-dollop-pjg75j99ppq4394pg-4000.app.github.dev/doacoes';
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
+  let title = 'Gestão de Doações';
+  let cols = ["Id", "Descrição", "Data", "Doação", "Ações"];
   fetch(url, { method: 'GET' })
   .then(async (res) =>{
     if (!res.ok) {
@@ -14,13 +16,11 @@ router.get('/', function(req, res, next) {
     return res.json();
   })
   .then((doacoes) => {
-    let title = 'Gestão de Doações';
-    let cols = ["Id", "Descrição", "Data", "Doação", "Ações"];
     res.render('layout', { body: 'pages/doacao', title, doacoes, cols, error: "" });
   })
   .catch((error) => {
     console.log('Erro', error);
-    res.render('layout', { body: 'pages/doacao', title: "Gestão de Doações", error: "Erro ao buscar doações" });
+    res.render('layout', { body: 'pages/doacao', title, error: "Erro ao buscar doações", cols, doacoes: [] });
   });
 });
 

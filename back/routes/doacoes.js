@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var sqlite3 = require('sqlite3');
+var verifyJWT = require('../auth/verify-token');
 
 const db = new sqlite3.Database('./database/database.db');
 
@@ -20,7 +21,7 @@ db.run(`
 });
 
 // ROTA: Criar uma nova doação
-router.post('/', (req, res) => {
+router.post('/', verifyJWT, function (req, res) {
   const { descricao, data, doacao } = req.body;
   db.run('INSERT INTO doacoes (descricao, data, doacao) VALUES (?, ?, ?)', [descricao, data, doacao], (err) => {
     if (err) {
@@ -33,7 +34,7 @@ router.post('/', (req, res) => {
 });
 
 // ROTA: Buscar todas as doações
-router.get('/', function(req, res, next) {
+router.get('/', verifyJWT, function(req, res, next) {
   db.all('SELECT * FROM doacoes', (err, doacoes) => {
     if (err) {
       console.error('Erro ao buscar doações: ', err);
@@ -44,7 +45,7 @@ router.get('/', function(req, res, next) {
 });
 
 // ROTA: Buscar uma doação por ID
-router.get('/:id', function (req, res, next) {
+router.get('/:id', verifyJWT, function (req, res, next) {
   const { id } = req.params;
   db.get('SELECT * FROM doacoes WHERE id = ?', [id], (err, row) => {
     if (err) {
@@ -59,7 +60,7 @@ router.get('/:id', function (req, res, next) {
 });
 
 // ROTA: Atualizar uma doação por ID
-router.put('/:id', function (req, res, next) {
+router.put('/:id', verifyJWT, function (req, res, next) {
   const { id } = req.params;
   const { descricao, data, doacao } = req.body;
   db.run(`UPDATE doacoes SET descricao = ?, data = ?, doacao = ? WHERE id = ?`, [descricao, data, doacao, id], function (err) {
@@ -77,7 +78,7 @@ router.put('/:id', function (req, res, next) {
 });
 
 // ROTA: Atualizar parcialmente uma doação por ID
-router.patch('/:id', function(req, res, next) {
+router.patch('/:id', verifyJWT, function(req, res, next) {
   const { id } = req.params;
   const fields = req.body;
   const keys = Object.keys(fields);
@@ -104,7 +105,7 @@ router.patch('/:id', function(req, res, next) {
 });
 
 // ROTA: Deletar uma doação por ID
-router.delete('/:id', function (req, res, next) {
+router.delete('/:id', verifyJWT, function (req, res, next) {
   const { id } = req.params;
   db.run(`DELETE FROM doacoes WHERE id = ?`, [id], function (err) {
     if (err) {

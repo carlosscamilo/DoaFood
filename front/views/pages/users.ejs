@@ -8,17 +8,14 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <!-- jQuery (Materialize dependency) -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
-
-
 </head>
 <body>
     <div class="container">
         <h1 class="center-align"><%= title %></h1>
 
-        <form id="doadorForm" class="col s12">
-            <input type="hidden" name="id" id="id">
+        <form id="userForm" class="col s12">
+            <input required type="hidden" name="id" id="id">
 
             <div class="input-field">
                 <label for="nome">Nome:</label>
@@ -26,13 +23,13 @@
             </div>
 
             <div class="input-field">
-                <label for="email">Email:</label>
-                <input required id="email" name="email" type="email">
+                <label for="senha">Senha:</label>
+                <input required id="senha" name="senha" type="password">
             </div>
 
             <div class="input-field">
-                <label for="endereco">Endereço:</label>
-                <input required id="endereco" name="endereco" type="text">
+                <label for="email">Email:</label>
+                <input required id="email" name="email" type="email">
             </div>
 
             <div class="input-field">
@@ -53,51 +50,50 @@
         <span id="error" class="red-text"></span>
 
         <% if (error) { %>
-            <span class="red-text"><%=JSON.stringify(error)%></span>
+            <span class="red-text"><%= error %></span>
         <% } %>
 
         <table class="striped">
             <thead>
                 <tr>
-                    <% cols.forEach(col => { %>
+                    <% for (let col of cols) { %>
                         <th><%= col %></th>
-                    <% }) %>
-                    <th>Ações</th> <!-- Add Ações column header -->
+                    <% } %>
                 </tr>
             </thead>
             <tbody>
-                <% doadores.forEach(doador => { %>
+                <% for (let user of users) { %>
                     <tr>
-                        <% Object.values(doador).forEach(value => { %>
-                            <td><%= value %></td>
-                        <% }) %>
+                        <% for (let prop in user) { %>
+                            <td><%= user[prop] %></td>
+                        <% } %>
                         <td>
-                            <button class="btn-small waves-effect waves-light" onclick="editDoador('<%= doador.id %>')">Editar</button>
-                            <button class="btn-small waves-effect waves-light red" onclick="deleteDoador('<%= doador.id %>')">Deletar</button>
+                            <button class="btn-small waves-effect waves-light" onclick="editUser('<%= user.id %>')">Editar</button>
+                            <button class="btn-small waves-effect waves-light red" onclick="deleteUser('<%= user.id %>')">Deletar</button>
                         </td>
                     </tr>
-                <% }) %>
+                <% } %>
             </tbody>
         </table>
     </div>
 
     <script>
-        const form = document.getElementById("doadorForm");
+        const form = document.getElementById("userForm");
 
         form.addEventListener("submit", (e) => {
             e.preventDefault();
-            const doador = mountDataForm();
-            let id = doador.id;
+            const user = mountDataForm();
+            let id = user.id;
             let METHOD = id ? 'PUT' : 'POST';
-            let URL = id ? `/doador/${id}` : '/doador';
-            createOrUpdate(doador, URL, METHOD);
+            let URL = id ? `/users/${id}` : '/users';
+            createOrUpdate(user, URL, METHOD);
         });
 
-        function createOrUpdate(doador, URL, METHOD) {
+        function createOrUpdate(user, URL, METHOD) {
             fetch(URL, {
                 method: METHOD,
-                headers: {"Content-Type": "application/json"},
-                body: JSON.stringify(doador)
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(user)
             })
             .then(async (res) => await checkError(res))
             .then(() => {
@@ -109,15 +105,13 @@
             });
         }
 
-        function editDoador(id) {
-            fetch("/doador/" + id, { method: "GET" })
+        function editUser(id) {
+            fetch("/users/" + id, { method: "GET" })
             .then(async (res) => await checkError(res))
-            .then((doador) => {
-                for (let prop in doador) {
-                    const input = document.querySelector(input[name="${prop}"]);
-                    if (input) {
-                        input.value = doador[prop];
-                    }
+            .then((user) => {
+                for (let prop in user) {
+                    const input = document.querySelector(`input[name="${prop}"]`);
+                    input.value = user[prop];
                 }
             })
             .catch((error) => {
@@ -125,8 +119,8 @@
             });
         }
 
-        function deleteDoador(id) {
-            fetch("/doador/" + id, { method: "DELETE" })
+        function deleteUser(id) {
+            fetch("/users/" + id, { method: "DELETE" })
             .then(async (res) => await checkError(res))
             .then(() => {
                 window.location.reload();
@@ -146,17 +140,23 @@
 
         function mountDataForm() {
             const formData = new FormData(form);
-            const doador = {};
+            const user = {};
             formData.forEach((v, k) => {
-                doador[k] = v;
+                user[k] = v;
             });
-            return doador;
+            return user;
         }
+
         $(document).ready(function(){
             $('#telefone').mask('(00) 00000-0000');
         });
 
-        
+        document.getElementById('nome').addEventListener('input', function (event) {
+            var value = this.value;
+            if (/[^a-zA-Z\u00C0-\u00FF\s]/g.test(value)) {
+                this.value = value.replace(/[^a-zA-Z\u00C0-\u00FF\s]/g, '');
+            }
+        });
     </script>
 </body>
 </html>

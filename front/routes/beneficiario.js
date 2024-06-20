@@ -1,9 +1,11 @@
 var express = require('express');
 var router = express.Router();
-const url = 'https://cuddly-space-fortnight-q7v44964x6jpc9v77-4000.app.github.dev/beneficiario';
+const url = 'https://silver-journey-vr75rvxqjwqhwwwj-4000.app.github.dev/beneficiario/';
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
+  let title = 'Gestão de Beneficiários';
+  let cols = ["Id", "Nome", "Cnpj", "Endereço", "Telefone", "Ações"];
 
   fetch(url, { method: 'GET' })
   .then(async (res) =>{
@@ -14,15 +16,11 @@ router.get('/', function(req, res, next) {
     return res.json();
   })
   .then((benefs) => {
-    let title = 'Gestão de Beneficiários';
-    let cols = ["Id", "Nome", "Cnpj", "Endereço", "Telefone", "Ações"]
     res.render('layout', { body: 'pages/beneficiario',title, benefs, cols, error: "" });
   })
-
-
   .catch((error) => {
     console.log('Erro', error);
-    res.rend( 'layout' , { body: 'pages/beneficiario',title :"gestâo de Doadores"});
+    res.render( 'layout' , { body: 'pages/beneficiario',title, error, cols, benefs: []});
   });
 });
 

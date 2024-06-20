@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var sqlite3 = require('sqlite3');
+var verifyJWT = require('../auth/verify-token');
 
 const db = new sqlite3.Database('./database/database.db');
 
@@ -20,7 +21,7 @@ db.run(`
 });
 
 
-router.post('/', (req, res) => {
+router.post('/', verifyJWT, function (req, res) {
   const { nome, email, endereco, telefone } = req.body;
   db.run('INSERT INTO doador (nome, email, endereco, telefone) VALUES (?, ?, ?, ?)', [nome, email, endereco, telefone], (err) => {
     if (err) {
@@ -34,7 +35,7 @@ router.post('/', (req, res) => {
 
 
 
-router.get('/', function(req, res, next) {
+router.get('/', verifyJWT, function(req, res, next) {
   db.all('SELECT * FROM doador', (err, doadores) => {
     if (err) {
       console.error('Erro ao buscar doadores: ', err);
@@ -45,7 +46,7 @@ router.get('/', function(req, res, next) {
 });
 
 
-router.get('/:id', function (req, res, next) {
+router.get('/:id', verifyJWT, function (req, res, next) {
     const { id } = req.params;
     db.get('SELECT * FROM doador WHERE id = ?', [id], (err, row) => {
       if (err) {
@@ -60,7 +61,7 @@ router.get('/:id', function (req, res, next) {
   });
 
 
-router.put('/:id', function (req, res, next) {
+router.put('/:id', verifyJWT, function (req, res, next) {
     const { id } = req.params;
     const { nome, email, endereco, telefone } = req.body;
     db.run(`UPDATE doador SET nome = ?, email = ?, endereco = ?, telefone = ? WHERE id = ?`, [nome, email, endereco, telefone, id], function (err) {
@@ -79,7 +80,7 @@ router.put('/:id', function (req, res, next) {
   });
 
 
-router.patch('/:id', function(req, res, next) {
+router.patch('/:id', verifyJWT, function(req, res, next) {
     const { id } = req.params;
     const fields = req.body;
     const keys = Object.keys(fields);
@@ -105,7 +106,7 @@ router.patch('/:id', function(req, res, next) {
     })
   });
 
-  router.delete('/:id', function (req, res, next) {
+  router.delete('/:id', verifyJWT, function (req, res, next) {
     const { id } = req.params;
     db.run(`DELETE FROM doador WHERE id = ?`, [id], function (err) {
       if(err) {

@@ -1,8 +1,9 @@
 var express = require('express');
 var router = express.Router();
 var sqlite3 = require('sqlite3');
+var verifyJWT = require('../auth/verify-token');
 
-const db = new sqlite3.Database('./database/database.db')
+const db = new sqlite3.Database('./database/database.db');
 
 
 //CRIANDO TABELA DE BENEFICIÁIO
@@ -23,7 +24,7 @@ db.run(`
 
 
 //CRIANDO NOVO BENEFICIÁRIO
-router.post('/', (req, res) => {
+router.post('/', verifyJWT,function (req, res) {
   const {nome, cnpj, endereco, telefone} = req.body;
   db.run(`INSERT INTO beneficiario (nome, cnpj, endereco, telefone) VALUES (?, ?, ?, ?)`, [nome, cnpj, endereco, telefone], (err) => {
     if(err) {
@@ -38,7 +39,7 @@ router.post('/', (req, res) => {
 
 
 //BUSCANDO TODOS OS BENEFICIÁRIOS
-router.get('/', function(req, res, next) {
+router.get('/', verifyJWT, function(req, res, next) {
   db.all('SELECT * FROM beneficiario', (err, benefs) => {
     if (err) {
       console.log('Beneficiários não foram encontrados', err)
@@ -51,7 +52,7 @@ router.get('/', function(req, res, next) {
 
 
 //BUSCANDO BENEFICIÁRIO POR ID
-router.get('/:id', function (req, res, next) {
+router.get('/:id', verifyJWT, function (req, res, next) {
   const { id } = req.params;
   db.get('SELECT * FROM beneficiario WHERE id = ?', [id], (err, row) => {
     if (err) {
@@ -66,7 +67,7 @@ router.get('/:id', function (req, res, next) {
 });
 
 //ATUALIZANDO BENEFICIÁRIO
-router.put('/:id', function (req, res, next) {
+router.put('/:id', verifyJWT, function (req, res, next) {
   const { id } = req.params;
   const { nome, cnpj, endereco, telefone } = req.body;
   db.run(`UPDATE beneficiario SET nome = ?, cnpj = ?, endereco = ?, telefone = ? WHERE id = ?`, [nome, cnpj, endereco, telefone, id], function (err) {
@@ -86,7 +87,7 @@ router.put('/:id', function (req, res, next) {
 
 
 // ATUALIZA PARCIALMENTE O BENEFICIÁRIO
-router.patch('/:id', function(req, res, next) {
+router.patch('/:id', verifyJWT, function(req, res, next) {
   const { id } = req.params;
   const fields = req.body;
   const keys = Object.keys(fields);
@@ -112,7 +113,7 @@ router.patch('/:id', function(req, res, next) {
   })
 });
 
-router.delete('/:id', function (req, res, next) {
+router.delete('/:id', verifyJWT, function (req, res, next) {
   const { id } = req.params;
   db.run(`DELETE FROM beneficiario WHERE id = ?`, [id], function (err) {
     if(err) {
