@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title><%= title %></title>
+    <!-- Materialize CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
+    <!-- Materialize JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <!-- jQuery (Materialize dependency) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1 class="center-align"><%= title %></h1>
+
+        <form id="doadorForm" class="col s12">
+            <input type="hidden" name="id" id="id">
+
+            <div class="input-field">
+                <label for="nome">Nome:</label>
+                <input required id="nome" name="nome" type="text">
+            </div>
+
+            <div class="input-field">
+                <label for="email">Email:</label>
+                <input required id="email" name="email" type="email">
+            </div>
+
+            <div class="input-field">
+                <label for="endereco">Endereço:</label>
+                <input required id="endereco" name="endereco" type="text">
+            </div>
+
+            <div class="input-field">
+                <label for="telefone">Telefone:</label>
+                <input required id="telefone" name="telefone" type="text">
+            </div>
+
+            <div class="row">
+                <button class="btn waves-effect waves-light" type="submit" name="action">Enviar
+                    <i class="material-icons right">send</i>
+                </button>
+                <button class="btn waves-effect waves-light red" type="reset">Cancelar
+                    <i class="material-icons right">clear</i>
+                </button>
+            </div>
+        </form>
+
+        <span id="error" class="red-text"></span>
+
+        <% if (error) { %>
+            <span class="red-text"><%= error %></span>
+        <% } %>
+
+        <table class="striped">
+            <thead>
+                <tr>
+                    <% cols.forEach(col => { %>
+                        <th><%= col %></th>
+                    <% }) %>
+                    <th>Ações</th> <!-- Add Ações column header -->
+                </tr>
+            </thead>
+            <tbody>
+                <% doadores.forEach(doador => { %>
+                    <tr>
+                        <% Object.values(doador).forEach(value => { %>
+                            <td><%= value %></td>
+                        <% }) %>
+                        <td>
+                            <button class="btn-small waves-effect waves-light" onclick="editDoador('<%= doador.id %>')">Editar</button>
+                            <button class="btn-small waves-effect waves-light red" onclick="deleteDoador('<%= doador.id %>')">Deletar</button>
+                        </td>
+                    </tr>
+                <% }) %>
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        const form = document.getElementById("doadorForm");
+
+        form.addEventListener("submit", (e) => {
+            e.preventDefault();
+            const doador = mountDataForm();
+            let id = doador.id;
+            let METHOD = id ? 'PUT' : 'POST';
+            let URL = id ? `/doador/${id}` : '/doador';
+            createOrUpdate(doador, URL, METHOD);
+        });
+
+        function createOrUpdate(doador, URL, METHOD) {
+            fetch(URL, {
+                method: METHOD,
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify(doador)
+            })
+            .then(async (res) => await checkError(res))
+            .then(() => {
+                form.reset();
+                window.location.reload();
+            })
+            .catch((error) => {
+                document.getElementById('error').innerText = error;
+            });
+        }
+
+        function editDoador(id) {
+            fetch("/doador/" + id, { method: "GET" })
+            .then(async (res) => await checkError(res))
+            .then((doador) => {
+                for (let prop in doador) {
+                    const input = document.querySelector(`input[name="${prop}"]`);
+                    if (input) {
+                        input.value = doador[prop];
+                    }
+                }
+            })
+            .catch((error) => {
+                document.getElementById('error').innerText = error;
+            });
+        }
+
+        function deleteDoador(id) {
+            fetch("/doador/" + id, { method: "DELETE" })
+            .then(async (res) => await checkError(res))
+            .then(() => {
+                window.location.reload();
+            })
+            .catch((error) => {
+                document.getElementById('error').innerText = error;
+            });
+        }
+
+        async function checkError(res) {
+            if (!res.ok) {
+                const err = await res.json();
+                throw err;
+            }
+            return res.json();
+        }
+
+        function mountDataForm() {
+            const formData = new FormData(form);
+            const doador = {};
+            formData.forEach((v, k) => {
+                doador[k] = v;
+            });
+            return doador;
+        }
+    </script>
+</body>
+</html>
