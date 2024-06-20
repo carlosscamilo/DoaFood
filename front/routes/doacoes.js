@@ -7,7 +7,15 @@ const url = 'https://zany-dollop-pjg75j99ppq4394pg-4000.app.github.dev/doacoes';
 router.get('/', function(req, res, next) {
   let title = 'Gestão de Doações';
   let cols = ["Id", "Descrição", "Data", "Doação", "Ações"];
-  fetch(url, { method: 'GET' })
+
+  const token = req.session.token || "";
+
+  fetch(url, { method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    }
+   })
   .then(async (res) =>{
     if (!res.ok) {
       const err = await res.json();
@@ -20,16 +28,20 @@ router.get('/', function(req, res, next) {
   })
   .catch((error) => {
     console.log('Erro', error);
-    res.render('layout', { body: 'pages/doacao', title, error: "Erro ao buscar doações", cols, doacoes: [] });
+    res.redirect('/login');
   });
 });
 
 // Post Nova Doação
 router.post("/", (req, res) => {
   const { descricao, data, doacao } = req.body;
+  const token = req.session.token || "";
+
   fetch(url, {
     method: "POST",
-    headers: {"Content-Type": "application/json"},
+    headers: {"Content-Type": "application/json",
+      'Authorization': `Bearer ${token}`
+    },
     body: JSON.stringify({ descricao, data, doacao })
   }).then(async (res) => {
     if (!res.ok) {
@@ -50,9 +62,13 @@ router.post("/", (req, res) => {
 router.put("/:id", (req, res) => {
   const { id } = req.params;
   const { descricao, data, doacao } = req.body;
+  const token = req.session.token || "";
+
   fetch(url + '/' + id, {
     method: "PUT",
-    headers: {"Content-Type": "application/json"},
+    headers: {"Content-Type": "application/json",
+      'Authorization': `Bearer ${token}`
+    },
     body: JSON.stringify({ descricao, data, doacao })
   }).then(async (res) => {
     if (!res.ok) {
@@ -72,8 +88,13 @@ router.put("/:id", (req, res) => {
 // Deletar Doação
 router.delete("/:id", (req, res) => {
   const { id } = req.params;
+  const token = req.session.token || "";
+
   fetch(url + '/' + id, {
-    method: "DELETE"
+    method: "DELETE",
+    headers: {
+      'Authorization': `Bearer ${token}`
+    }
   }).then(async (res) => {
     if (!res.ok) {
       const err = await res.json();
@@ -92,8 +113,13 @@ router.delete("/:id", (req, res) => {
 // Buscando Doação por ID
 router.get("/:id", (req, res) => {
   const { id } = req.params;
-  fetch(url + '/' + id, {
-    method: "GET"
+  const token = req.session.token || "";
+  fetch(url+id, {
+    method: "GET",
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    }
   }).then(async (res) => {
     if (!res.ok) {
       const err = await res.json();

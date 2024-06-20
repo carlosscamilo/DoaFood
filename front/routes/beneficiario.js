@@ -7,7 +7,14 @@ router.get('/', function(req, res, next) {
   let title = 'Gestão de Beneficiários';
   let cols = ["Id", "Nome", "Cnpj", "Endereço", "Telefone", "Ações"];
 
-  fetch(url, { method: 'GET' })
+  const token = req.session.token || "";
+
+  fetch(url, { method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    }
+   })
   .then(async (res) =>{
     if (!res.ok) {
       const err = await res.json();
@@ -20,16 +27,20 @@ router.get('/', function(req, res, next) {
   })
   .catch((error) => {
     console.log('Erro', error);
-    res.render( 'layout' , { body: 'pages/beneficiario',title, error, cols, benefs: []});
+    res.redirect('/login');
   });
 });
 
 //Post Novo Beneficiário
 router.post("/", (req, res) => {
   const { nome, cnpj, endereco, telefone } = req.body;
+  const token = req.session.token || "";
+
   fetch(url, {
     method: "POST",
-    headers: {"Content-Type": "application/json"},
+    headers: {"Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`
+    },
     body: JSON.stringify({ nome, cnpj, endereco, telefone })
   }).then(async (res) =>{
     if (!res.ok) {
@@ -50,9 +61,13 @@ router.post("/", (req, res) => {
 router.put("/:id", (req, res) => {
   const { id } = req.params;
   const { nome, cnpj, endereco, telefone } = req.body;
+  const token = req.session.token || "";
+
   fetch(url+id, {
     method: "PUT",
-    headers: {"Content-Type": "application/json"},
+    headers: {"Content-Type": "application/json",
+              'Authorization': `Bearer ${token}`
+      },
     body: JSON.stringify({ nome, cnpj, endereco, telefone })
   }).then(async (res) =>{
     if (!res.ok) {
@@ -73,8 +88,13 @@ router.put("/:id", (req, res) => {
 router.delete("/:id", (req, res) => {
   const { id } = req.params;
   const { nome, cnpj, endereco, telefone } = req.body;
+  const token = req.session.token || "";
+
   fetch(url+id, {
-    method: "DELETE"
+    method: "DELETE",
+    headers: {
+      'Authorization': `Bearer ${token}`
+    }
   }).then(async (res) =>{
     if (!res.ok) {
       const err = await res.json();
@@ -92,9 +112,14 @@ router.delete("/:id", (req, res) => {
 
 //BUSCANDO BENEFICIÁRIO POR ID
 router.get("/:id", (req, res) => {
-  const { id } = req.params
+  const { id } = req.params;
+  const token = req.session.token || "";
   fetch(url+id, {
-    method: "GET"
+    method: "GET",
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    }
   }).then(async (res) => {
     if (!res.ok) {
       const err = await res.json()

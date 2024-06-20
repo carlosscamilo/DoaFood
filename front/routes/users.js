@@ -33,10 +33,11 @@ router.get('/', function (req, res, next) {
 
 // POST new user
 router.post("/", (req, res) => {
-  const { username, password, email, phone } = req.body
+  const { username, password, email, phone } = req.body;
   fetch(url + '/register', {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/json"
+    },
     body: JSON.stringify({ username, password, email, phone })
   }).then(async (res) => {
     if (!res.ok) {

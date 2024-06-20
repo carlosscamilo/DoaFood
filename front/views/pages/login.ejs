@@ -25,6 +25,11 @@
               </div>
               <div class="center-align">
                 <button type="submit" class="btn waves-effect waves-light">Login</button><br>
+                <%if(error){%>
+                  <span>
+                    <%=error.error%>
+                  </span>
+                  <%}%>
               </div>
             </form>
           </div>
@@ -48,6 +53,6 @@
             M.toast({ html: 'Por favor, preencha todos os campos', classes: 'red' });
           }
         });
-      </script> 
+      </script>
 </body>
 </html>
