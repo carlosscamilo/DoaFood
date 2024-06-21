@@ -5,7 +5,7 @@ const url = "https://silver-journey-vr75rvxqjwqhwwwj-4000.app.github.dev/users/"
 /* GET users listing. */
 router.get('/', function (req, res, next) {
   let title = "Gestão de Usuários"
-  let cols = ["Id", "Nome", "Senha", "Email", "Telefone", "Ações"]
+  let cols = ["Id", "Name", "password", "Email", "phone", "Ações"]
 
   const token = req.session.token || ""
 
