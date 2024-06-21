@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-const url = "https://silver-journey-vr75rvxqjwqhwwwj-4000.app.github.dev/users/"
+const url = "https://doafood-backend.onrender.com/users/"
 
 /* GET users listing. */
 router.get('/', function (req, res, next) {
@@ -78,7 +78,7 @@ router.put("/:id", (req, res) => {
 })
 
 // REMOVE user
-router.delete("/:id", (req, res) => {
+router.delete("/:id", (req, res) => {  
   const { id } = req.params
   fetch(url+id, {
     method: "DELETE"

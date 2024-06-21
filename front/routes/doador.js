@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-const url = 'https://silver-journey-vr75rvxqjwqhwwwj-4000.app.github.dev/doador/';
+const url = 'https://doafood-backend.onrender.com/doador/';
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
