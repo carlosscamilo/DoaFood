@@ -85,7 +85,8 @@ router.get('/:id', function (req, res, next) {
 router.put('/:id', function (req, res, next) {
   const { id } = req.params;
   const { username, password, email, phone } = req.body;
-  db.run('UPDATE users SET username = ?, password = ?, email = ?, phone = ? WHERE id = ?', [username, password, email, phone, id], function (err) {
+  bcrypt.hash(password, 10, (err, hash) => {
+  db.run('UPDATE users SET username = ?, password = ?, email = ?, phone = ? WHERE id = ?', [username, hash, email, phone, id], function (err) {
     if (err) {
       console.error('Erro ao atualizar o usuário', err);
       return res.status(500).json({ error: 'Erro ao atualizar o usuário' });
@@ -94,6 +95,7 @@ router.put('/:id', function (req, res, next) {
       return res.status(404).json({ error: 'Usuário não encontrado' });
     }
     res.status(200).json({ message: "Usuário atualizado com sucesso" });
+  });
   });
 });
 
