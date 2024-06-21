@@ -18,13 +18,13 @@
             <input required type="hidden" name="id" id="id">
 
             <div class="input-field">
-                <label for="nome">Nome:</label>
-                <input required id="nome" name="nome" type="text">
+                <label for="username">Nome:</label>
+                <input required id="username" name="username" type="text">
             </div>
 
             <div class="input-field">
-                <label for="senha">Senha:</label>
-                <input required id="senha" name="senha" type="password">
+                <label for="password">Senha:</label>
+                <input required id="password" name="password" type="password">
             </div>
 
             <div class="input-field">
@@ -33,8 +33,8 @@
             </div>
 
             <div class="input-field">
-                <label for="telefone">Telefone:</label>
-                <input required id="telefone" name="telefone" type="text">
+                <label for="phone">Telefone:</label>
+                <input required id="phone" name="phone" type="text">
             </div>
 
             <div class="row">
@@ -148,10 +148,10 @@
         }
 
         $(document).ready(function(){
-            $('#telefone').mask('(00) 00000-0000');
+            $('#phone').mask('(00) 00000-0000');
         });
 
-        document.getElementById('nome').addEventListener('input', function (event) {
+        document.getElementById('username').addEventListener('input', function (event) {
             var value = this.value;
             if (/[^a-zA-Z\u00C0-\u00FF\s]/g.test(value)) {
                 this.value = value.replace(/[^a-zA-Z\u00C0-\u00FF\s]/g, '');
