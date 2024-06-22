@@ -24,7 +24,7 @@ router.get('/', function(req, res, next) {
     return res.json();
   })
   .then((doacoes) => {
-    res.render('layout', { body: 'pages/doacao', title, doacoes, cols, error: "" });
+    res.render('layout', { isLoginPage: false, body: 'pages/doacao', title, doacoes, cols, error: "" });
   })
   .catch((error) => {
     console.log('Erro', error);

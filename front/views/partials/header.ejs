@@ -1,9 +1,11 @@
 <nav>
     <ul>
-        <li> <a href="/login">Login</a></li>
-        <li> <a href="/doador">Doador</a></li>
-        <li> <a href="/beneficiario">Beneficiário</li>
-        <li> <a href="/doacoes">Doação</a></li>
-        <li> <a href="/users">Usuário</a></li>
+        <% if(!isLoginPage) { %>
+            <li> <a href="/login">Login</a></li>
+            <li> <a href="/doador">Doador</a></li>
+            <li> <a href="/beneficiario">Beneficiário</a></li>
+            <li> <a href="/doacoes">Doação</a></li>
+            <li> <a href="/users">Usuário</a></li>
+        <% } %>
     </ul>
 </nav>
