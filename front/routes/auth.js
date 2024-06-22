@@ -25,7 +25,8 @@ router.post('/', (req, res) => {
             return res.json()
         })
         .then((data) => {
-            req.session.token = data.token
+            req.session.token = data.token 
+            req.session.username = username;
             res.redirect('/users')
         })
         .catch((error) => {

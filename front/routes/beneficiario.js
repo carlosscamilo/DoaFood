@@ -23,7 +23,7 @@ router.get('/', function(req, res, next) {
     return res.json();
   })
   .then((benefs) => {
-    res.render('layout', { isLoginPage: false, body: 'pages/beneficiario',title, benefs, cols, error: "" });
+    res.render('layout', { username: req.session.username, isLoginPage: false, body: 'pages/beneficiario',title, benefs, cols, error: "" });
   })
   .catch((error) => {
     console.log('Erro', error);
