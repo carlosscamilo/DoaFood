@@ -2,11 +2,11 @@ var express = require('express');
 var router = express.Router();
 
 
-const url = "https://silver-journey-vr75rvxqjwqhwwwj-4000.app.github.dev/auth/login"
+const url = "https://doafood-backend.onrender.com/auth/login"
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
-    res.render('layout', { body: 'pages/login', title: 'Express', error: ''});
+    res.render('layout', { isLoginPage: true, body: 'pages/login', title: 'Express', error: '' });
 });
 
 router.post('/', (req, res) => {
@@ -25,12 +25,13 @@ router.post('/', (req, res) => {
             return res.json()
         })
         .then((data) => {
-            req.session.token = data.token
+            req.session.token = data.token 
+            req.session.username = username;
             res.redirect('/users')
         })
         .catch((error) => {
             console.log('Erro', error)
-            res.render('layout', { body: 'pages/login', title: 'Express', error,})
+            res.render('layout', { isLoginPage: true, body: 'pages/login', title: 'Express', error,})
         })
 })
 

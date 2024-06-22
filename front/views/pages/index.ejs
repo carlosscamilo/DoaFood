@@ -1,53 +1,155 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Login</title>
-    <!-- Materialize CSS -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
-    <!-- Materialize JavaScript -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-    <!-- jQuery (Materialize dependency) -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DoaFood - Projeto de Doação de Alimentos</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #f7f7f7;
+      color: #333;
+    }
+    .navbar {
+      background-color: #ee6e73;
+    }
+    .navbar-brand, .nav-link {
+      color: white !important;
+    }
+    .hero {
+      background: url('https://img.freepik.com/fotos-gratis/vista-frontal-de-voluntaria-preparando-doacoes-de-alimentos_23-2148638049.jpg?w=1380&t=st=1719030491~exp=1719031091~hmac=7184db754945d50884f9791b17dec848eaf6a0e4eb93afd61e949f3c7162a3a7') center center/cover no-repeat;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      text-align: center;
+    }
+    .hero h1 {
+      font-size: 4rem;
+      margin-bottom: 20px;
+      color: #ee6e73;
+    }
+    .hero p {
+      font-size: 1.5rem;
+      margin-bottom: 30px;
+    }
+    .hero .btn {
+      background-color: white;
+      border: 2px solid white;
+      color: #ee6e73;
+      padding: 10px 20px;
+      font-size: 18px;
+      text-transform: uppercase;
+      transition: 0.3s;
+    }
+    .hero .btn:hover {
+      background-color: #ee6e73;
+      color: white;
+    }
+    .info-section {
+      padding: 60px 0;
+      background-color: #fff;
+    }
+    .info-section h2 {
+      margin-bottom: 20px;
+    }
+    .info-section p {
+      font-size: 1.2rem;
+      line-height: 1.6;
+    }
+    .info-section img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 10px;
+      margin-top: 20px;
+    }
+    .footer {
+      background-color: #333;
+      color: white;
+      text-align: center;
+      padding: 20px 0;
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <div class="row">
-          <div class="col s12 m6 offset-m3">
-            <h3 class="center-align">Login</h3>
-            <form id="loginForm" action="/login" method="POST">
-              <div class="input-field">
-                <input id="username" type="text" name="username" required>
-                <label for="username">Username</label>
-              </div>
-              <div class="input-field">
-                <input id="password" type="password" name="password" required>
-                <label for="password">Password</label>
-              </div>
-              <div class="center-align">
-                <button type="submit" class="btn waves-effect waves-light">Login</button><br>
-              </div>
-            </form>
-          </div>
-        </div>
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg">
+    <a class="navbar-brand" href="#">DoaFood</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="#about">Sobre</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#how-it-works">Como Funciona</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#contact">Contato</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <div class="hero">
+    <div>
+      <p>Ajude a combater a fome doando alimentos para quem mais precisa.</p>
+      <a href="/login" class="btn">Login</a>
+    </div>
+  </div>
+
+  <!-- Info Section 1 -->
+  <div class="container info-section" id="about">
+    <div class="row">
+      <div class="col-md-6">
+        <h2>Sobre Nós</h2>
+        <p>Somos uma organização dedicada a combater a fome distribuindo alimentos para pessoas necessitadas. Nossa missão é garantir que todos tenham acesso a uma refeição saudável e nutritiva.</p>
       </div>
-      
-      <script>
-        document.addEventListener('DOMContentLoaded', function () {
-          M.updateTextFields();
-        });
-      
-        document.getElementById('loginForm').addEventListener('submit', function (event) {
-          // event.preventDefault();
-          var username = document.getElementById('username').value;
-          var password = document.getElementById('password').value;
-      
-          console.log(username, password);
-      
-          if (!username || !password) {
-            event.preventDefault();
-            M.toast({ html: 'Por favor, preencha todos os campos', classes: 'red' });
-          }
-        });
-      </script> 
+      <div class="col-md-6">
+        <img src="https://img.freepik.com/fotos-gratis/garota-sorridente-pegando-macas_23-2149182033.jpg?w=1380&t=st=1719030880~exp=1719031480~hmac=3ad84c845ef95573be55fe155c0556de415efc4a5bc121def960355ecde37a22" alt="Sobre nós">        
+      </div>
+    </div>
+  </div>
+
+  <!-- Info Section 2 -->
+  <div class="container info-section bg-light" id="how-it-works">
+    <div class="row">
+      <div class="col-md-6">
+        <img src="https://jundiai.sp.gov.br/noticias/wp-content/uploads/sites/32/2021/12/doacao-de-alimentos.jpg" alt="Como Funciona">
+      </div>
+      <div class="col-md-6">
+        <h2>Como Funciona</h2>
+        <p>Nós coletamos doações de alimentos de empresas e indivíduos. Os alimentos são então distribuídos para várias comunidades e instituições de caridade. Você pode fazer parte dessa corrente do bem fazendo uma doação ou se voluntariando.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Info Section 3 -->
+  <div class="container info-section" id="contact">
+    <div class="row">
+      <div class="col-md-12 text-center">
+        <h2>Contato</h2>
+        <p>Entre em contato conosco para mais informações sobre como você pode ajudar.</p>
+        <p>Email: contato@doafood.org</p>
+        <p>Telefone: (11) 1234-5678</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <p>&copy; 2024 DoaFood. Todos os direitos reservados.</p>
+  </div>
+
+  <!-- Bootstrap JS and dependencies -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

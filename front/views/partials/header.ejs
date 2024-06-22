@@ -1,9 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+        .user-info {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding: 10px;
+        }
+        .username-box {
+            display: inline-flex;
+            align-items: center;
+            padding: 5px; /* Ajustado para reduzir o tamanho */
+            margin-left: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px; /* Adicionado para garantir que o texto não faça o quadrado expandir demais */
+        }
+        nav ul {
+            display: flex;
+            justify-content: space-between;
+            list-style: none;
+            padding: 0;
+        }
+        nav ul li {
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
 <nav>
     <ul>
-        <li> <a href="/login">Login</a></li>
-        <li> <a href="/doador">Doador</a></li>
-        <li> <a href="/beneficiario">Beneficiário</li>
-        <li> <a href="/doacoes">Doação</a></li>
-        <li> <a href="/users">Usuário</a></li>
+        <% if(!isLoginPage) { %>
+            <li><a href="/">Logout</a></li>
+            <li><a href="/doador">Doador</a></li>
+            <li><a href="/beneficiario">Beneficiário</a></li>
+            <li><a href="/doacoes">Doação</a></li>
+            <li><a href="/users">Usuário</a></li>
+            <% if (typeof username !== 'undefined' && username) { %>
+                <div class="user-info">
+                    <span class="username-box">👤 Olá, <%= username %>!</span>
+                </div>
+            <% } %>
+        <% } %>
     </ul>
 </nav>
+</body>
+</html>

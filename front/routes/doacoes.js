@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-const url = 'https://zany-dollop-pjg75j99ppq4394pg-4000.app.github.dev/doacoes';
+const url = 'https://doafood-backend.onrender.com/doacoes';
 
 
 /* GET home page. */
@@ -24,7 +24,7 @@ router.get('/', function(req, res, next) {
     return res.json();
   })
   .then((doacoes) => {
-    res.render('layout', { body: 'pages/doacao', title, doacoes, cols, error: "" });
+    res.render('layout', { username: req.session.username, isLoginPage: false, body: 'pages/doacao', title, doacoes, cols, error: "" });
   })
   .catch((error) => {
     console.log('Erro', error);

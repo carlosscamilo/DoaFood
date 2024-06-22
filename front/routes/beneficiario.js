@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-const url = 'https://silver-journey-vr75rvxqjwqhwwwj-4000.app.github.dev/beneficiario/';
+const url = 'https://doafood-backend.onrender.com/beneficiario/';
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -23,7 +23,7 @@ router.get('/', function(req, res, next) {
     return res.json();
   })
   .then((benefs) => {
-    res.render('layout', { body: 'pages/beneficiario',title, benefs, cols, error: "" });
+    res.render('layout', { username: req.session.username, isLoginPage: false, body: 'pages/beneficiario',title, benefs, cols, error: "" });
   })
   .catch((error) => {
     console.log('Erro', error);
